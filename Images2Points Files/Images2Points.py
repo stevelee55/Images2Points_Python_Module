@@ -10,6 +10,8 @@
 
 # https://www.mathworks.com/discovery/ransac.html
 
+# load the text file csv and export the tform.
+
 # Steps:
 # Import images.
 # Get the points.
@@ -17,6 +19,9 @@
 # Export it.
 
 import cv2
+import numpy
+from skimage.measure import ransac
+from skimage.transform import AffineTransform
 
 class Images2Points(object):
 
@@ -32,16 +37,36 @@ class Images2Points(object):
 		surf = cv2.xfeatures2d.SURF_create()
 
 		# Finding keypoints using SURF.
-		points1, firstFeatures = surf.detectAndCompute(firstImage, None)
-		points2, secondFeatures = surf.detectAndCompute(secondImage, None)
+		points1, firstImageFeatures = surf.detectAndCompute(firstImage, None)
+		points2, secondImageFeatures = surf.detectAndCompute(secondImage, None)
 
 		# Creating BFMatcher object for feature matching.
 		bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=True)
 
 		# Getting the index pairs that match.
-		indexPairs = bf.match(secondFeatures, firstFeatures)
+		indexPairs = bf.match(secondImageFeatures, firstImageFeatures)
 
-		print(indexPairs)
+		# indexPairs[i].queryIdx gives index of points that were matched.
+		matchedPointsOnImage2 = numpy.asarray([points2[indexPairs[i].queryIdx] for i in range(len(indexPairs))])
+		numpyArrayMatchedPointsOnImage2 = numpy.asarray([matchedPointsOnImage2[i].pt for i in range(len(matchedPointsOnImage2))])
+		# matchedPoints have the KeyPoint objects, which an be accesesd by index and .pt.
+		# print(matchedPoints[0].pt)
+		matchedPointsOnImage1 = numpy.asarray([points1[indexPairs[i].trainIdx] for i in range(len(indexPairs))])
+		numpyArrayMatchedPointsOnImage1 = numpy.asarray([matchedPointsOnImage1[i].pt for i in range(len(matchedPointsOnImage1))])
+		# Estimating geometric transform.
+		# This uses Ransac.
+		estimatePair, status = cv2.findHomography(numpyArrayMatchedPointsOnImage2, numpyArrayMatchedPointsOnImage1, cv2.RANSAC, 5.0)
+
+		# # Transformation Matrix.
+		tforms = estimatePair
+
+
+		model_robust, inliers = ransac((numpyArrayMatchedPointsOnImage1, numpyArrayMatchedPointsOnImage2), AffineTransform, min_samples=3, residual_threshold=2, max_trials=100)
+
+		print(model_robust.scale, model_robust.translation, model_robust.rotation)
+
+		print(tforms)
+
 		cv2.waitKey(0)
 
 
