@@ -20,6 +20,7 @@
 
 import cv2
 import numpy
+import csv
 from skimage.measure import ransac
 from skimage.transform import AffineTransform
 
@@ -32,19 +33,25 @@ class Images2Points(object):
 
 	# Export Points.
 	def exportPointsAsCSV(self, csvFileName, pointsFromImage1, pointsFromImage2):
-		return 0
+		# Creating a csv file writer.
+		with open(csvFileName, "w") as csvfile:
+			filewriter = csv.writer(csvfile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
+
+			totalNumberOfPoints = len(pointsFromImage1)
+
+			for i in range(totalNumberOfPoints):
+				filewriter.writerow([pointsFromImage1[i][0], pointsFromImage1[i][1], pointsFromImage2[i][0], pointsFromImage2[i][1]])
 
 	# Import/parse points from specified csv file.
 	def importPointsFromCSV(self, csvFileName):
 
 		# Parse the specified csv file.
 
-		return pointsFromImage1, pointsFromImage2
+		return 0, 0 #pointsFromImage1, pointsFromImage2
 
 	# Get Points.
 	# image1 and image2 are image matrix data.
-	def getPointsFromImages(self, firstImage, secondImage, csvFileName=None):
-
+	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None):
 		# Creating the SURF detector.
 		surf = cv2.xfeatures2d.SURF_create()
 
@@ -67,7 +74,7 @@ class Images2Points(object):
 		numpyArrayMatchedPointsOnImage1 = numpy.asarray([matchedPointsOnImage1[i].pt for i in range(len(matchedPointsOnImage1))])
 
 		# If csv file name is specified, export the points as csv file format.
-		if (csvFileName is not None):
+		if (outputcsvFileName is not None):
 			self.exportPointsAsCSV(csvFileName=csvFileName, pointsFromImage1=numpyArrayMatchedPointsOnImage1, pointsFromImage2=numpyArrayMatchedPointsOnImage2)
 
 		# Returning the points.
@@ -76,7 +83,6 @@ class Images2Points(object):
 
 	# Finding robust matches using ransac from points.
 	def find_robust_matches_ranscac(self, inputcsvFileName=None, inputPointsFromImage1=None, inputPointsFromImage2=None, outputcsvFileName=None):
-
 		# Variables to hold the unfiltered points from image1 and image2.
 		pointsFromImage1 = []
 		pointsFromImage2 = []
