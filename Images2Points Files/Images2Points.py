@@ -29,9 +29,21 @@ class Images2Points(object):
 	def __init__(self):
 		print("Images2Points is created.")
 
+
+	# Export Points.
+	def exportPointsAsCSV(self, csvFileName, pointsFromImage1, pointsFromImage2):
+		return 0
+
+	# Import/parse points from specified csv file.
+	def importPointsFromCSV(self, csvFileName):
+
+		# Parse the specified csv file.
+
+		return pointsFromImage1, pointsFromImage2
+
 	# Get Points.
 	# image1 and image2 are image matrix data.
-	def getPointsFromImages(self, firstImage, secondImage, numOfPointsToCalculate):
+	def getPointsFromImages(self, firstImage, secondImage, csvFileName=None):
 
 		# Creating the SURF detector.
 		surf = cv2.xfeatures2d.SURF_create()
@@ -53,27 +65,52 @@ class Images2Points(object):
 		# print(matchedPoints[0].pt)
 		matchedPointsOnImage1 = numpy.asarray([points1[indexPairs[i].trainIdx] for i in range(len(indexPairs))])
 		numpyArrayMatchedPointsOnImage1 = numpy.asarray([matchedPointsOnImage1[i].pt for i in range(len(matchedPointsOnImage1))])
-		# Estimating geometric transform.
-		# This uses Ransac.
-		estimatePair, status = cv2.findHomography(numpyArrayMatchedPointsOnImage2, numpyArrayMatchedPointsOnImage1, cv2.RANSAC, 5.0)
 
-		# # Transformation Matrix.
-		tforms = estimatePair
+		# If csv file name is specified, export the points as csv file format.
+		if (csvFileName is not None):
+			self.exportPointsAsCSV(csvFileName=csvFileName, pointsFromImage1=numpyArrayMatchedPointsOnImage1, pointsFromImage2=numpyArrayMatchedPointsOnImage2)
 
-
-		model_robust, inliers = ransac((numpyArrayMatchedPointsOnImage1, numpyArrayMatchedPointsOnImage2), AffineTransform, min_samples=3, residual_threshold=2, max_trials=100)
-
-		print(model_robust.scale, model_robust.translation, model_robust.rotation)
-
-		print(tforms)
-
-		cv2.waitKey(0)
+		# Returning the points.
+		return numpyArrayMatchedPointsOnImage1, numpyArrayMatchedPointsOnImage2
 
 
+	# Finding robust matches using ransac from points.
+	def find_robust_matches_ranscac(self, inputcsvFileName=None, inputPointsFromImage1=None, inputPointsFromImage2=None, outputcsvFileName=None):
 
-	# Export Points.
+		# Variables to hold the unfiltered points from image1 and image2.
+		pointsFromImage1 = []
+		pointsFromImage2 = []
 
+		# If output csv file name is specified and points are passed in, use the csv file name as the values by default.
+		if (inputcsvFileName is not None):
+			pointsFromImage1, pointsFromImage2 = self.importPointsFromCSV(inputcsvFileName)
+		else:
+			pointsFromImage1 = inputPointsFromImage1
+			pointsFromImage2 = inputPointsFromImage2
 
+		# Using ransac to get the robust matches.
+		model_robust, inliers = ransac((pointsFromImage1, pointsFromImage2), AffineTransform, min_samples=3, residual_threshold=2, max_trials=100)
+
+		# Total number of unfiltered points.
+		numOfUnfilteredPoints = len(pointsFromImage1)
+		# Filtering out the points that are not inliers.
+		robustMatchesFromImage1 = []
+		robustMatchesFromImage2 = []
+		for i in range(numOfUnfilteredPoints):
+			# If the point at the index i, it is an inlier.
+			if (inliers[i]):
+				robustMatchesFromImage1.append(pointsFromImage1[i])
+				robustMatchesFromImage2.append(pointsFromImage2[i])
+
+		# Converting the list to numpy array type.
+		robustMatchesFromImage1 = numpy.array(robustMatchesFromImage1)
+		robustMatchesFromImage2 = numpy.array(robustMatchesFromImage2)
+
+		if (outputcsvFileName is not None):
+			self.exportPointsAsCSV(csvFileName=outputcsvFileName, pointsFromImage1=robustMatchesFromImage1, pointsFromImage2=robustMatchesFromImage2)
+
+		# Returning the robust matches.
+		return robustMatchesFromImage1, robustMatchesFromImage2
 
 
 # Ransac option steps (http://scikit-image.org/docs/dev/auto_examples/transform/plot_matching.html):
