@@ -3,21 +3,6 @@
 # Presumably it will have 4 columns with first two being coordinates of a point in image 1 and next two the
 # coordinates of the corresponding point in second image.
 
-# - - does this need number of points one wants to register as input? if so, let that be input.
-
-# ind_robust_matches_ransac
-# find_robust_matches_ranscac might likely use ransac and it loads the txt file and then trims to number.
-
-# https://www.mathworks.com/discovery/ransac.html
-
-# load the text file csv and export the tform.
-
-# Steps:
-# Import images.
-# Get the points.
-# Create CSV file.
-# Export it.
-
 import cv2
 import numpy
 import csv
@@ -30,27 +15,10 @@ class Images2Points(object):
 	def __init__(self):
 		print("Images2Points is created.")
 
-
-	# Export Points.
-	def exportPointsAsCSV(self, csvFileName, pointsFromImage1, pointsFromImage2):
-		# Creating a csv file writer.
-		with open(csvFileName, "w") as csvfile:
-			filewriter = csv.writer(csvfile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
-
-			totalNumberOfPoints = len(pointsFromImage1)
-
-			for i in range(totalNumberOfPoints):
-				filewriter.writerow([pointsFromImage1[i][0], pointsFromImage1[i][1], pointsFromImage2[i][0], pointsFromImage2[i][1]])
-
-	# Import/parse points from specified csv file.
-	def importPointsFromCSV(self, csvFileName):
-
-		# Parse the specified csv file.
-
-		return 0, 0 #pointsFromImage1, pointsFromImage2
-
-	# Get Points.
-	# image1 and image2 are image matrix data.
+	# Get matching points.
+	###
+	# Use: Input two images and the function returns numpy array of points for image 1 and 2 that match.
+	# If outputcsvFileName is specified, the function also creates a csv file of the points for image 1 and 2.
 	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None):
 		# Creating the SURF detector.
 		surf = cv2.xfeatures2d.SURF_create()
@@ -75,13 +43,17 @@ class Images2Points(object):
 
 		# If csv file name is specified, export the points as csv file format.
 		if (outputcsvFileName is not None):
-			self.exportPointsAsCSV(csvFileName=csvFileName, pointsFromImage1=numpyArrayMatchedPointsOnImage1, pointsFromImage2=numpyArrayMatchedPointsOnImage2)
+			self.exportPointsAsCSV(csvFileName=outputcsvFileName, pointsFromImage1=numpyArrayMatchedPointsOnImage1, pointsFromImage2=numpyArrayMatchedPointsOnImage2)
 
 		# Returning the points.
 		return numpyArrayMatchedPointsOnImage1, numpyArrayMatchedPointsOnImage2
 
-
 	# Finding robust matches using ransac from points.
+	###
+	# Use: Input the raw matching points for the image 1 and 2 and the function returns numpy arrays of robust matches for image 1 and 2.
+	# If inputcsvFileName is specified, the function looks for the specified csv file name and uses the points that are specified in the csv
+	# file for finding robust matches.
+	# If outputcsvFileName is specified, the function also creates a csv file of the points for image 1 and 2.
 	def find_robust_matches_ranscac(self, inputcsvFileName=None, inputPointsFromImage1=None, inputPointsFromImage2=None, outputcsvFileName=None):
 		# Variables to hold the unfiltered points from image1 and image2.
 		pointsFromImage1 = []
@@ -118,9 +90,40 @@ class Images2Points(object):
 		# Returning the robust matches.
 		return robustMatchesFromImage1, robustMatchesFromImage2
 
+	# Export Points.
+	###
+	# Use: Takes points from image 1 and 2 and creates csv file with the csv file name that is specified.
+	def exportPointsAsCSV(self, csvFileName, pointsFromImage1, pointsFromImage2):
+		# Creating a csv file writer.
+		with open(csvFileName, "w") as csvfile:
+			filewriter = csv.writer(csvfile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL)
+			totalNumberOfPoints = len(pointsFromImage1)
+			# Writing in each row with the x and y coordinate points for each image 1 and image 2.
+			filewriter.writerow(["Image1-x", "Image1-y", "Image2-x", "Image2-y"])
+			for i in range(totalNumberOfPoints):
+				filewriter.writerow([pointsFromImage1[i][0], pointsFromImage1[i][1], pointsFromImage2[i][0], pointsFromImage2[i][1]])
 
-# Ransac option steps (http://scikit-image.org/docs/dev/auto_examples/transform/plot_matching.html):
-# Take the src and dst points and ransac them.
-# get the inliers and model_robust.
-# export them as csv.
-# Or create a function that returns inliers and model_robust.
+	# Import/parse points from specified csv file.
+	###
+	# Use: Takes csv file name and parses the points that are in the csv file and returns them as
+	# numpy arrays.
+	def importPointsFromCSV(self, csvFileName):
+		# Variables to hold the unfiltered points from image1 and image2.
+		pointsFromImage1 = []
+		pointsFromImage2 = []
+
+		# Parse the specified csv file.
+		with open(csvFileName) as csv_file:
+			fileReader = csv.reader(csv_file, delimiter=",")
+			rowNamesGoneThrough = False
+			for row in fileReader:
+				if (rowNamesGoneThrough):
+					pointsFromImage1.append([float(row[0]), float(row[1])])
+					pointsFromImage2.append([float(row[2]), float(row[3])])
+				else:
+					rowNamesGoneThrough = True
+
+		pointsFromImage1 = numpy.array(pointsFromImage1)
+		pointsFromImage2 = numpy.array(pointsFromImage2)
+
+		return pointsFromImage1, pointsFromImage2
