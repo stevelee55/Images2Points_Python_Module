@@ -1,3 +1,7 @@
+# Written by Steve S. Lee
+# 10/14/2018
+# stevesl@umich.edu
+
 from Images2Points import Images2Points
 
 # For reading in the images.

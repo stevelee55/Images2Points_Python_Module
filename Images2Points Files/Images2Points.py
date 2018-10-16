@@ -1,3 +1,7 @@
+# Written by Steve S. Lee
+# 10/14/2018
+# stevesl@umich.edu
+
 # Spec:
 # Takes two images as an input and creates csv file that has landmark/regisreted points between the points.
 # Presumably it will have 4 columns with first two being coordinates of a point in image 1 and next two the
