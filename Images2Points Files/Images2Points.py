@@ -23,19 +23,43 @@ class Images2Points(object):
 	###
 	# Use: Input two images and the function returns numpy array of points for image 1 and 2 that match.
 	# If outputcsvFileName is specified, the function also creates a csv file of the points for image 1 and 2.
-	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None):
+	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None, hessianThreshold=None, useSIFT=None):
+
+		# By default use SURF. Otherwise specified to use SIFT
 		# Creating the SURF detector.
-		surf = cv2.xfeatures2d.SURF_create()
+		# surf = cv2.xfeatures2d.SURF_create()
+
+		surf = cv2.xfeatures2d.SIFT_create()
+
+		#surf.setHessianThreshold(1000)
+
+		# Allowing the user to set hessian.
+		if (hessianThreshold is not None):
+			surf.setHessianThreshold(hessianThreshold)
+
+		# Allowing the use to use sift if desired.
+		if (useSIFT is not None):
+			surf = cv2.xfeatures2d.SIFT_create()
 
 		# Finding keypoints using SURF.
 		points1, firstImageFeatures = surf.detectAndCompute(firstImage, None)
 		points2, secondImageFeatures = surf.detectAndCompute(secondImage, None)
 
 		# Creating BFMatcher object for feature matching.
-		bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=True)
+		bf = cv2.BFMatcher(cv2.NORM_L2,crossCheck=False)
+
+		#bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=True)
 
 		# Getting the index pairs that match.
-		indexPairs = bf.match(secondImageFeatures, firstImageFeatures)
+		# indexPairs = bf.match(secondImageFeatures, firstImageFeatures)
+		matcs = bf.match(secondImageFeatures, firstImageFeatures)
+
+		# # Apply ratio test
+		# indexPairs = []
+		# for m in matcs:
+		# 	print(m.distance)
+		# 	if m.distance < 250:
+		# 		indexPairs.append(m)
 
 		# indexPairs[i].queryIdx gives index of points that were matched.
 		matchedPointsOnImage2 = numpy.asarray([points2[indexPairs[i].queryIdx] for i in range(len(indexPairs))])
