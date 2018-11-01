@@ -54,13 +54,6 @@ class Images2Points(object):
 		# indexPairs = bf.match(secondImageFeatures, firstImageFeatures)
 		matcs = bf.match(secondImageFeatures, firstImageFeatures)
 
-		# # Apply ratio test
-		# indexPairs = []
-		# for m in matcs:
-		# 	print(m.distance)
-		# 	if m.distance < 250:
-		# 		indexPairs.append(m)
-
 		# indexPairs[i].queryIdx gives index of points that were matched.
 		matchedPointsOnImage2 = numpy.asarray([points2[indexPairs[i].queryIdx] for i in range(len(indexPairs))])
 		numpyArrayMatchedPointsOnImage2 = numpy.asarray([matchedPointsOnImage2[i].pt for i in range(len(matchedPointsOnImage2))])
