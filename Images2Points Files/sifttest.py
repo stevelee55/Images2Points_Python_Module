@@ -3,21 +3,23 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 
 
-img1 = cv.imread("cardcase5.jpg",1) # trainImage
-img2 = cv.imread("cardcase4.jpg",1) # queryImage
+img1 = cv.imread("class1.jpg",1) # trainImage
+img2 = cv.imread("class2.jpg",1) # queryImage
 
 normalizedImg = np.zeros((len(img1), len(img1[0])))
-img1 = cv.normalize(img1,  normalizedImg, 0, 100, cv.NORM_MINMAX)
+img1 = cv.normalize(img1,  normalizedImg, 0, 255, cv.NORM_MINMAX)
 
 normalizedImg = np.zeros((len(img2), len(img2[0])))
-img2 = cv.normalize(img2,  normalizedImg, 0, 100, cv.NORM_MINMAX)
+img2 = cv.normalize(img2,  normalizedImg, 0, 255, cv.NORM_MINMAX)
 
 
 # Initiate ORB detector
 #use orb with norm hamming.
-#orb = cv.ORB_create()
+orb = cv.ORB_create()
 
-orb = cv.xfeatures2d.SIFT_create()
+#// l2 for surf,sift
+#// for ORB,BRIEF,etc.
+#orb = cv.xfeatures2d.SIFT_create()
 
 # Allow the user to change betwee sift, surf, and orb and write down the benifits and whannot.
 
@@ -28,7 +30,8 @@ kp1, des1 = orb.detectAndCompute(img1,None)
 kp2, des2 = orb.detectAndCompute(img2,None)
 
 # create BFMatcher object
-bf = cv.BFMatcher(cv.NORM_L2, crossCheck=True)
+# Cross check is alternative for ratio test.
+bf = cv.BFMatcher(cv.NORM_HAMMING, crossCheck=True)
 # Match descriptors.
 matches = bf.match(des1, des2)
 
@@ -50,5 +53,5 @@ print(len(matches))
 
 # min 4 points.
 
-img3 = cv.drawMatches(img1,kp1,img2,kp2,matches[:5], None, flags=2)
+img3 = cv.drawMatches(img1,kp1,img2,kp2,matches[:20], None, flags=2)
 plt.imshow(img3),plt.show()
