@@ -3,14 +3,16 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 
 
-img1 = cv.imread("class1.jpg",1) # trainImage
-img2 = cv.imread("class2.jpg",1) # queryImage
+img1 = cv.imread("law1.jpg",0) # trainImage
+img2 = cv.imread("law2.jpg",0) # queryImage
 
 normalizedImg = np.zeros((len(img1), len(img1[0])))
-img1 = cv.normalize(img1,  normalizedImg, 0, 255, cv.NORM_MINMAX)
+img1 = cv.normalize(img1,  normalizedImg, 0, 100, cv.NORM_MINMAX)
 
 normalizedImg = np.zeros((len(img2), len(img2[0])))
-img2 = cv.normalize(img2,  normalizedImg, 0, 255, cv.NORM_MINMAX)
+img2 = cv.normalize(img2,  normalizedImg, 0, 100, cv.NORM_MINMAX)
+
+# Noralmize
 
 
 # Initiate ORB detector
@@ -53,5 +55,5 @@ print(len(matches))
 
 # min 4 points.
 
-img3 = cv.drawMatches(img1,kp1,img2,kp2,matches[:20], None, flags=2)
+img3 = cv.drawMatches(img1,kp1,img2,kp2,matches[:50], None, flags=2)
 plt.imshow(img3),plt.show()

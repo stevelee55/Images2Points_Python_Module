@@ -11,8 +11,8 @@ import cv2
 import numpy
 import csv
 from skimage.measure import ransac
+from skimage.transform import ProjectiveTransform
 from skimage.transform import AffineTransform
-
 class Images2Points(object):
 
 	# Initializer.
@@ -25,34 +25,54 @@ class Images2Points(object):
 	# If outputcsvFileName is specified, the function also creates a csv file of the points for image 1 and 2.
 	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None, hessianThreshold=None, useSIFT=None):
 
+
+		# normalizedImg = numpy.zeros((len(firstImage), len(firstImage[0])))
+		# firstImage = cv2.normalize(firstImage,  normalizedImg, 0, 100, cv2.NORM_MINMAX)
+
+		# normalizedImg = numpy.zeros((len(secondImage), len(secondImage[0])))
+		# secondImage = cv2.normalize(secondImage,  normalizedImg, 0, 100, cv2.NORM_MINMAX)
+
+
 		# By default use SURF. Otherwise specified to use SIFT
 		# Creating the SURF detector.
 		# surf = cv2.xfeatures2d.SURF_create()
 
-		surf = cv2.xfeatures2d.SIFT_create()
+		#surf = cv2.xfeatures2d.SIFT_create()
+
+
+		surf = cv2.ORB_create()
 
 		#surf.setHessianThreshold(1000)
 
-		# Allowing the user to set hessian.
-		if (hessianThreshold is not None):
-			surf.setHessianThreshold(hessianThreshold)
+		# # Allowing the user to set hessian.
+		# if (hessianThreshold is not None):
+		# 	surf.setHessianThreshold(hessianThreshold)
 
-		# Allowing the use to use sift if desired.
-		if (useSIFT is not None):
-			surf = cv2.xfeatures2d.SIFT_create()
+		# # Allowing the use to use sift if desired.
+		# if (useSIFT is not None):
+		#surf = cv2.xfeatures2d.SURF_create()
 
 		# Finding keypoints using SURF.
 		points1, firstImageFeatures = surf.detectAndCompute(firstImage, None)
 		points2, secondImageFeatures = surf.detectAndCompute(secondImage, None)
 
 		# Creating BFMatcher object for feature matching.
-		bf = cv2.BFMatcher(cv2.NORM_L2,crossCheck=False)
+		bf = cv2.BFMatcher(cv2.NORM_HAMMING,crossCheck=True)
 
 		#bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=True)
 
 		# Getting the index pairs that match.
-		# indexPairs = bf.match(secondImageFeatures, firstImageFeatures)
-		matcs = bf.match(secondImageFeatures, firstImageFeatures)
+		tempindexPairs = bf.match(secondImageFeatures, firstImageFeatures)
+		tempindexPairs = sorted(tempindexPairs, key = lambda x:x.distance)
+
+		print(len(tempindexPairs))
+
+		indexPairs = tempindexPairs
+
+		# for pair in tempindexPairs:
+		# 	if (pair.distance < 60.0):
+		# 		indexPairs.append(pair)
+		#matcs = bf.match(secondImageFeatures, firstImageFeatures)
 
 		# indexPairs[i].queryIdx gives index of points that were matched.
 		matchedPointsOnImage2 = numpy.asarray([points2[indexPairs[i].queryIdx] for i in range(len(indexPairs))])
@@ -80,7 +100,7 @@ class Images2Points(object):
 		pointsFromImage1 = []
 		pointsFromImage2 = []
 
-		# If output csv file name is specified and points are passed in, use the csv file name as the values by default.
+		# If output csv file name is specified and points are passed in, use the csv file name as the values by t.
 		if (inputcsvFileName is not None):
 			pointsFromImage1, pointsFromImage2 = self.importPointsFromCSV(inputcsvFileName)
 		else:
@@ -88,7 +108,7 @@ class Images2Points(object):
 			pointsFromImage2 = inputPointsFromImage2
 
 		# Using ransac to get the robust matches.
-		model_robust, inliers = ransac((pointsFromImage1, pointsFromImage2), AffineTransform, min_samples=3, residual_threshold=2, max_trials=100)
+		model_robust, inliers = ransac((pointsFromImage1, pointsFromImage2), ProjectiveTransform, min_samples=3, residual_threshold=2, max_trials=1500)
 
 		# Total number of unfiltered points.
 		numOfUnfilteredPoints = len(pointsFromImage1)

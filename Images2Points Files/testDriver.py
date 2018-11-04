@@ -9,8 +9,8 @@ import cv2
 
 moduler = Images2Points()
 
-image1Name = "law1.jpg"
-image2Name = "law2.jpg"
+image1Name = "pam1.jpg"
+image2Name = "pam2.jpg"
 
 # Reading in the images using the image names.
 img1 = cv2.imread(image1Name, 0)
@@ -52,7 +52,7 @@ robustMatchesFromImage1, robustMatchesFromImage2 = moduler.find_robust_matches_r
 ###
 
 # Using the points to find transformation matrix and applying it to the image to warp it.
-tform, status = cv2.findHomography(robustMatchesFromImage2, robustMatchesFromImage1,cv2.RANSAC,5.0)
+tform, status = cv2.findHomography(robustMatchesFromImage2, robustMatchesFromImage1, cv2.RANSAC, 5.0)
 transimg2 = cv2.warpPerspective(img2, tform, (len(img2[0]), len(img2)))
 # Original position.
 cv2.imwrite("firstImage.jpg", img1)
