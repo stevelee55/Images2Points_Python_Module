@@ -12,7 +12,9 @@ Python script that can:
 
 ## Getting Started
 
-Include "from Images2Points import Images2Points" at the top of your project and create an instance of "Images2Points" with "instance = Images2Points()" to start using the module's functions.
+Include "from Images2Points import Images2Points" at the top of your project
+and create an instance of "Images2Points" with "instance = Images2Points()" to
+start using the module's functions.
 
 ### Prerequisites
 
