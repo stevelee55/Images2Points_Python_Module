@@ -29,15 +29,20 @@ Required Parameters:
 
 Optional Parameters:
 1) outputcsvFileName(String. No file exported by default.)
+* Pass in name of the csv file that will be exported. Include file extension.
 2) detectorType(String. Uses "ORB" by default.)
-* Options:
-1) "ORB", "SIFT", and "SURF".
+* Options: "ORB", "SIFT", and "SURF".
 3) crossCheck(Bool. Set "True" by default".)
 4) normType(String. Uses "cv2.NORM_HAMMING" by default.)
-5) createImageWithPtsAndLines(Bool. No image exported by default.)
+* Options: "cv2.NORM_HAMMING", "cv2.NORM_L1", and "cv2.NORM_L2".
+5) createImageWithPtsAndLines(String. No image exported by default.)
+* Pass in name of the image file that will be exported. Include file extension.
 
 ```
-Give an example
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
+```
+```
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv")
 ```
 
 Recommendations:
