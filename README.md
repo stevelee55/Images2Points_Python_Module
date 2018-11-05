@@ -38,11 +38,14 @@ Optional Parameters:
 5) createImageWithPtsAndLines(String. No image exported by default.)
 * Pass in name of the image file that will be exported. Include file extension.
 
+Example 1:
 ```
 pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
 ```
+
+Example 2:
 ```
-pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv")
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="SIFT", crossCheck=True, normType="cv2.NORM_L2", createImageWithPtsAndLines="imageWithPtsAndLines.jpg")
 ```
 
 Recommendations:
