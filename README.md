@@ -6,7 +6,8 @@ Images2Points Python Module
 # Images2Points
 
 Python script that can:
-	1) Detect feature points in two images.
+
+1) Detect feature points in two images.
 	2) Export detected feature points in csv format.
 	3) Find matching feature points between two images.
 	4) Export matching feature points in csv format.
