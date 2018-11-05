@@ -24,17 +24,25 @@ This module requires cv2, numpy, csv, skimage, and matplotlib. Install these bef
 ### getPointsFromImages(...)
 
 Required Parameters:
-1) firstImage(BGR)
-2) secondImage(BGR)
+1) firstImage(BGR.)
+2) secondImage(BGR.)
 
 Optional Parameters:
-1) outputcsvFileName(String)
-2) detectorType(String)
-3)
+1) outputcsvFileName(String. No file exported by default.)
+2) detectorType(String. Uses "ORB" by default.)
+* Options:
+1) "ORB", "SIFT", and "SURF".
+3) crossCheck(Bool. Set "True" by default".)
+4) normType(String. Uses "cv2.NORM_HAMMING" by default.)
+5) createImageWithPtsAndLines(Bool. No image exported by default.)
 
 ```
 Give an example
 ```
+
+Recommendations:
+1) If ORB detector is used, use "cv2.NORM_HAMMING".
+2) If SIFT or SURF detector is used, use either "cv2.NORM_L1" or "cv2.NORM_L2".
 
 ## Acknowledgments
 
