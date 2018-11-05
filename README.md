@@ -21,9 +21,16 @@ This module requires cv2, numpy, csv, skimage, and matplotlib. Install these bef
 
 ## Included Functions
 
-### getPointsFromImages(firstImage(Req.), secondImage(Req.), outputcsvFileName(Opt.), detectorType(Opt.), secondImage(Req.), outputcsvFileName(Opt.), detectorType(Opt.), )
+### getPointsFromImages(...)
 
-Explain what these tests test and why
+Required Parameters:
+1) firstImage(BGR)
+2) secondImage(BGR)
+
+Optional Parameters:
+1) outputcsvFileName(String)
+2) detectorType(String)
+3)
 
 ```
 Give an example
