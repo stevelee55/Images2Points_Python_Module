@@ -12,7 +12,7 @@ import numpy
 import csv
 from skimage.measure import ransac
 from skimage.transform import ProjectiveTransform
-from skimage.transform import AffineTransform
+#from skimage.transform import AffineTransform
 class Images2Points(object):
 
 	# Initializer.
@@ -23,56 +23,45 @@ class Images2Points(object):
 	###
 	# Use: Input two images and the function returns numpy array of points for image 1 and 2 that match.
 	# If outputcsvFileName is specified, the function also creates a csv file of the points for image 1 and 2.
-	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None, hessianThreshold=None, useSIFT=None):
-
-
+	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None, detectorType=None, crossCheck=None, normType=None, createImageWithPtsAndLines=None):
+		
+		# Normalizing Images. Leave this commented for now.
 		# normalizedImg = numpy.zeros((len(firstImage), len(firstImage[0])))
 		# firstImage = cv2.normalize(firstImage,  normalizedImg, 0, 100, cv2.NORM_MINMAX)
-
 		# normalizedImg = numpy.zeros((len(secondImage), len(secondImage[0])))
 		# secondImage = cv2.normalize(secondImage,  normalizedImg, 0, 100, cv2.NORM_MINMAX)
 
-
-		# By default use SURF. Otherwise specified to use SIFT
-		# Creating the SURF detector.
-		# surf = cv2.xfeatures2d.SURF_create()
-
-		#surf = cv2.xfeatures2d.SIFT_create()
-
-
-		#surf = cv2.ORB_create()
-
-		#surf.setHessianThreshold(1000)
-
-		# # Allowing the user to set hessian.
-		# if (hessianThreshold is not None):
-		# 	surf.setHessianThreshold(hessianThreshold)
-
-		# # Allowing the use to use sift if desired.
-		# if (useSIFT is not None):
-		surf = cv2.xfeatures2d.SURF_create()
+		# By default use ORB.
+		detector = cv2.ORB_create()
+		if (detectorType is not None):
+			if (detectorType == "SIFT"):
+				detector = cv2.xfeatures2d.SIFT_create()
+			elif (detectorType == "SURF"):
+				detector = cv2.xfeatures2d.SURF_create()
 
 		# Finding keypoints using SURF.
-		points1, firstImageFeatures = surf.detectAndCompute(firstImage, None)
-		points2, secondImageFeatures = surf.detectAndCompute(secondImage, None)
+		points1, firstImageFeatures = detector.detectAndCompute(firstImage, None)
+		points2, secondImageFeatures = detector.detectAndCompute(secondImage, None)
 
 		# Creating BFMatcher object for feature matching.
-		bf = cv2.BFMatcher(cv2.NORM_L2,crossCheck=True)
-
-		#bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=True)
+		# Use NORM_HAMMING by default.
+		bf = cv2.BFMatcher(cv2.NORM_HAMMING,crossCheck=True)
+		if (normType is not None):
+			if (normType == "NORM_L1"):
+				if (crossCheck):
+					bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=True)
+				else:
+					bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
+			elif (normType == "NORM_L2"):
+				if (crossCheck):
+					bf = cv2.BFMatcher(cv2.NORM_L2,crossCheck=True)
+				else:
+					bf = cv2.BFMatcher(cv2.NORM_L2,crossCheck=False)
 
 		# Getting the index pairs that match.
 		tempindexPairs = bf.match(secondImageFeatures, firstImageFeatures)
 		tempindexPairs = sorted(tempindexPairs, key = lambda x:x.distance)
-
-		print(len(tempindexPairs))
-
 		indexPairs = tempindexPairs
-
-		# for pair in tempindexPairs:
-		# 	if (pair.distance < 60.0):
-		# 		indexPairs.append(pair)
-		#matcs = bf.match(secondImageFeatures, firstImageFeatures)
 
 		# indexPairs[i].queryIdx gives index of points that were matched.
 		matchedPointsOnImage2 = numpy.asarray([points2[indexPairs[i].queryIdx] for i in range(len(indexPairs))])
@@ -85,6 +74,11 @@ class Images2Points(object):
 		# If csv file name is specified, export the points as csv file format.
 		if (outputcsvFileName is not None):
 			self.exportPointsAsCSV(csvFileName=outputcsvFileName, pointsFromImage1=numpyArrayMatchedPointsOnImage1, pointsFromImage2=numpyArrayMatchedPointsOnImage2)
+
+		# Creating and exporting an image with feature points and matching points with lines between the matching ones.
+		if (createImageWithPtsAndLines is not None):
+			if (createImageWithPtsAndLines):
+				self.exportImagePointsAndMatchesGraphically("pointsAndMatches,jpg")
 
 		# Returning the points.
 		return numpyArrayMatchedPointsOnImage1, numpyArrayMatchedPointsOnImage2
@@ -168,3 +162,14 @@ class Images2Points(object):
 		pointsFromImage2 = numpy.array(pointsFromImage2)
 
 		return pointsFromImage1, pointsFromImage2
+
+	
+	def exportImagePointsAndMatchesGraphically(self, firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches, numOfMatchesToShow=None, exportImageName):
+		# Shows all of the matches by default.
+		numOfPointsToUse = len(matches) - 1
+		if (numOfMatchesToShow is not None):
+			if (numOfMatchesToShow <= numOfPointsToUse):
+				numOfPointsToUse = numOfMatchesToShow
+
+		img3 = cv.drawMatches(firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches[:numOfPointsToUse], None, flags=2)
+		plt.imwrite(exportImageName, img3)
