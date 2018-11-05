@@ -17,12 +17,15 @@ img1 = cv2.imread(image1Name, 0)
 img2 = cv2.imread(image2Name, 0)
 
 # Getting the matching points from the images.
-# Option 1: File name specified, exports the points in csv file.
+# Example 1: File name specified, exports the points in csv file.
 pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv")
 
-# # Getting the matching points from the images.
-# # Option 2: File name not specified.
+# Getting the matching points from the images.
+# Example 2: File name not specified.
 pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
+
+
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="ORB", crossCheck=True, normType="NORM_HAMMING", createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=10)
 
 ###
 

@@ -23,7 +23,7 @@ class Images2Points(object):
 	###
 	# Use: Input two images and the function returns numpy array of points for image 1 and 2 that match.
 	# If outputcsvFileName is specified, the function also creates a csv file of the points for image 1 and 2.
-	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None, detectorType=None, crossCheck=None, normType=None, createImageWithPtsAndLines=None):
+	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None, detectorType=None, crossCheck=None, normType=None, createImageWithPtsAndLines=None, numOfPtsAndLinesToShow=None):
 		
 		# Normalizing Images. Leave this commented for now.
 		# normalizedImg = numpy.zeros((len(firstImage), len(firstImage[0])))
@@ -77,8 +77,12 @@ class Images2Points(object):
 
 		# Creating and exporting an image with feature points and matching points with lines between the matching ones.
 		if (createImageWithPtsAndLines is not None):
-			if (createImageWithPtsAndLines):
-				self.exportImagePointsAndMatchesGraphically("pointsAndMatches,jpg")
+			showNPtsAndLines = len(indexPairs) - 1
+			if (numOfPtsAndLinesToShow is not None):
+				if (numOfPtsAndLinesToShow <= showNPtsAndLines):
+					showNPtsAndLines = numOfPtsAndLinesToShow
+
+			self.exportImagePointsAndMatchesGraphically(firstImage, points1, secondImage, points2, indexPairs, createImageWithPtsAndLines, showNPtsAndLines)
 
 		# Returning the points.
 		return numpyArrayMatchedPointsOnImage1, numpyArrayMatchedPointsOnImage2
@@ -164,12 +168,12 @@ class Images2Points(object):
 		return pointsFromImage1, pointsFromImage2
 
 	
-	def exportImagePointsAndMatchesGraphically(self, firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches, numOfMatchesToShow=None, exportImageName):
+	def exportImagePointsAndMatchesGraphically(self, firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches, exportImageName, numOfMatchesToShow=None):
 		# Shows all of the matches by default.
 		numOfPointsToUse = len(matches) - 1
 		if (numOfMatchesToShow is not None):
 			if (numOfMatchesToShow <= numOfPointsToUse):
 				numOfPointsToUse = numOfMatchesToShow
 
-		img3 = cv.drawMatches(firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches[:numOfPointsToUse], None, flags=2)
-		plt.imwrite(exportImageName, img3)
+		imageWithDrawings = cv2.drawMatches(firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches[:numOfPointsToUse], None, flags=4)
+		cv2.imwrite(exportImageName, imageWithDrawings)
