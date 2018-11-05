@@ -1,7 +1,5 @@
 Written by Steve S. Lee
 stevesl@umich.edu
-
-Images2Points Python Module
 		
 # Images2Points
 
