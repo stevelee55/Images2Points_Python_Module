@@ -40,7 +40,7 @@ class Images2Points(object):
 		#surf = cv2.xfeatures2d.SIFT_create()
 
 
-		surf = cv2.ORB_create()
+		#surf = cv2.ORB_create()
 
 		#surf.setHessianThreshold(1000)
 
@@ -50,14 +50,14 @@ class Images2Points(object):
 
 		# # Allowing the use to use sift if desired.
 		# if (useSIFT is not None):
-		#surf = cv2.xfeatures2d.SURF_create()
+		surf = cv2.xfeatures2d.SIFT_create()
 
 		# Finding keypoints using SURF.
 		points1, firstImageFeatures = surf.detectAndCompute(firstImage, None)
 		points2, secondImageFeatures = surf.detectAndCompute(secondImage, None)
 
 		# Creating BFMatcher object for feature matching.
-		bf = cv2.BFMatcher(cv2.NORM_HAMMING,crossCheck=True)
+		bf = cv2.BFMatcher(cv2.NORM_L2,crossCheck=True)
 
 		#bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=True)
 
@@ -108,7 +108,7 @@ class Images2Points(object):
 			pointsFromImage2 = inputPointsFromImage2
 
 		# Using ransac to get the robust matches.
-		model_robust, inliers = ransac((pointsFromImage1, pointsFromImage2), ProjectiveTransform, min_samples=3, residual_threshold=2, max_trials=1500)
+		model_robust, inliers = ransac((pointsFromImage1, pointsFromImage2), ProjectiveTransform, min_samples=3, residual_threshold=2, max_trials=2000)
 
 		# Total number of unfiltered points.
 		numOfUnfilteredPoints = len(pointsFromImage1)
