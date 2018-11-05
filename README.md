@@ -10,6 +10,7 @@ Python script that can:
 2) Export detected feature points in csv format.
 3) Find matching feature points between two images.
 4) Export matching feature points in csv format.
+5) Export an image that graphically shows detected feature points and matched feature points.
 
 ## Getting Started
 
