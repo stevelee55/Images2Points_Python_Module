@@ -45,6 +45,9 @@ pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1
 
 Example 2:
 ```
+img1 = cv2.imread("image1.jpg", 0)
+img2 = cv2.imread("image2.jpg", 0)
+
 pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="SIFT", crossCheck=True, normType="cv2.NORM_L2", createImageWithPtsAndLines="imageWithPtsAndLines.jpg")
 ```
 
