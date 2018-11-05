@@ -69,8 +69,46 @@ Recommendations:
 * Array of points from the function getPointsFromImages(...).
 3) inputPointsFromImage2(Array.)
 * Array of points from the function getPointsFromImages(...).
+4) outputcsvFileName(String. Doesn't output csv file by default.)
+* Pass in name of the csv file that will be exported. Include file extension.
 
 ** It is possible to not pass in "inputcsvFileName", "inputPointsFromImage1", and "inputPointsFromImage2", but to get the desired output, either "inputcsvFileName" or "inputPointsFromImage1", and "inputPointsFromImage2" should be passed in.
+
+Example 1:
+```
+img1 = cv2.imread("image1.jpg", 0)
+img2 = cv2.imread("image2.jpg", 0)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
+
+robustMatchesFromImage1, robustMatchesFromImage2 = moduler.find_robust_matches_ranscac(inputPointsFromImage1=pointsFromImage1, inputPointsFromImage2=pointsFromImage2)
+```
+
+Example 2:
+```
+img1 = cv2.imread("image1.jpg", 0)
+img2 = cv2.imread("image2.jpg", 0)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
+
+robustMatchesFromImage1, robustMatchesFromImage2 = moduler.find_robust_matches_ranscac(inputcsvFileName="matchedPointsRaw.csv")
+```
+
+Example 3:
+```
+img1 = cv2.imread("image1.jpg", 0)
+img2 = cv2.imread("image2.jpg", 0)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
+
+robustMatchesFromImage1, robustMatchesFromImage2 = moduler.find_robust_matches_ranscac(inputPointsFromImage1=pointsFromImage1, inputPointsFromImage2=pointsFromImage2, outputcsvFileName="robustMatches.csv")
+```
+
+Example 4:
+```
+img1 = cv2.imread("image1.jpg", 0)
+img2 = cv2.imread("image2.jpg", 0)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
+
+robustMatchesFromImage1, robustMatchesFromImage2 = moduler.find_robust_matches_ranscac(inputcsvFileName="matchedPointsRaw.csv", outputcsvFileName="robustMatches.csv")
+```
 
 ## Acknowledgments
 
