@@ -50,7 +50,7 @@ class Images2Points(object):
 
 		# # Allowing the use to use sift if desired.
 		# if (useSIFT is not None):
-		surf = cv2.xfeatures2d.SIFT_create()
+		surf = cv2.xfeatures2d.SURF_create()
 
 		# Finding keypoints using SURF.
 		points1, firstImageFeatures = surf.detectAndCompute(firstImage, None)
