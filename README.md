@@ -18,11 +18,10 @@ This module uses SIFT, SURF, and ORB, some of which are patented and cannot be u
 
 This module requires cv2, numpy, csv, skimage, and matplotlib. Install these before using the module.
 
-## How to use testDriver.py for initial testing of the module.
 
+## Included Functions
 
-
-### Break down into end to end tests
+### getPointsFromImages(firstImage(Req.), secondImage(Req.), outputcsvFileName(Opt.), detectorType(Opt.), secondImage(Req.), outputcsvFileName(Opt.), detectorType(Opt.), )
 
 Explain what these tests test and why
 
