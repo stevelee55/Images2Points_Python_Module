@@ -12,7 +12,7 @@ Python script that can:
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Include "from Images2Points import Images2Points" at the top of your project and create an instance of "Images2Points" with "instance = Images2Points()" to start using the module's functions.
 
 ### Prerequisites
 
