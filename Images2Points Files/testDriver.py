@@ -9,8 +9,8 @@ import cv2
 
 moduler = Images2Points()
 
-image1Name = "hatcher3.jpg"
-image2Name = "hatcher6.jpg"
+image1Name = "hatcher6.jpg"
+image2Name = "hatcher3.jpg"
 
 # Reading in the images using the image names.
 img1 = cv2.imread(image1Name, 0)
