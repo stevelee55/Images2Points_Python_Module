@@ -33,8 +33,8 @@ This module requires cv2, numpy, csv, skimage, and matplotlib. Install these bef
 2. detectorType(String. Uses "ORB" by default.)
    * Options: "ORB", "SIFT", and "SURF".
 3. crossCheck(Bool. Set "True" by default".)
-4. normType(String. Uses "NORM_HAMMING" by default.)
-   * Options: "NORM_HAMMING", "NORM_L1", and "NORM_L2".
+4. normType(enum cv::NormTypes. Uses NORM_HAMMING by default.)
+   * Options: Refer to the table of various norm types here under "NormTypes": https://docs.opencv.org/3.4/d2/de8/group__core__array.html.
 5. createImageWithPtsAndLines(String. No image exported by default.)
    * Pass in name of the image file that will be exported. Include file extension.
 6. numOfPtsAndLinesToShow(Int. Number of total matches and detected feature points by default.)
@@ -53,7 +53,7 @@ Example 2: All of the available parameters.
 img1 = cv2.imread("image1.jpg", 0)
 img2 = cv2.imread("image2.jpg", 0)
 
-pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="SIFT", crossCheck=True, normType="NORM_L2", createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=10)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="SIFT", crossCheck=True, normType=cv2.NORM_HAMMING2, createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=10)
 ```
 
 Recommendations:

@@ -47,16 +47,11 @@ class Images2Points(object):
 		# Use NORM_HAMMING by default.
 		bf = cv2.BFMatcher(cv2.NORM_HAMMING,crossCheck=True)
 		if (normType is not None):
-			if (normType == "NORM_L1"):
+			if (crossCheck is not None):
 				if (crossCheck):
-					bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=True)
+					bf = cv2.BFMatcher(normType,crossCheck=True)
 				else:
-					bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
-			elif (normType == "NORM_L2"):
-				if (crossCheck):
-					bf = cv2.BFMatcher(cv2.NORM_L2,crossCheck=True)
-				else:
-					bf = cv2.BFMatcher(cv2.NORM_L2,crossCheck=False)
+					bf = cv2.BFMatcher(normType,crossCheck=False)
 
 		# Getting the index pairs that match.
 		tempindexPairs = bf.match(secondImageFeatures, firstImageFeatures)

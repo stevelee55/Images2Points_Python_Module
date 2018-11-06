@@ -12,6 +12,8 @@ moduler = Images2Points()
 image1Name = "hatcher6.jpg"
 image2Name = "hatcher3.jpg"
 
+#hatcher3 and 6
+
 # Reading in the images using the image names.
 img1 = cv2.imread(image1Name, 0)
 img2 = cv2.imread(image2Name, 0)
@@ -25,7 +27,7 @@ pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1
 pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
 
 
-pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="ORB", crossCheck=True, normType="NORM_HAMMING", createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=20)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="ORB", crossCheck=True, normType=cv2.NORM_HAMMING, createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=20)
 
 ###
 
