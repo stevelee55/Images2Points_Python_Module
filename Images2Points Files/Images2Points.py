@@ -23,7 +23,7 @@ class Images2Points(object):
 	###
 	# Use: Input two images and the function returns numpy array of points for image 1 and 2 that match.
 	# If outputcsvFileName is specified, the function also creates a csv file of the points for image 1 and 2.
-	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None, detectorType=None, crossCheck=None, normType=None, createImageWithPtsAndLines=None, numOfPtsAndLinesToShow=None):
+	def getPointsFromImages(self, firstImage, secondImage, outputcsvFileName=None, detectorType=None, crossCheck=None, normType=None, createImageWithPtsAndLines=None, numOfPtsAndLinesToShow=None, enableSingleColor=None):
 		
 		# Normalizing Images. Leave this commented for now.
 		# normalizedImg = numpy.zeros((len(firstImage), len(firstImage[0])))
@@ -77,7 +77,10 @@ class Images2Points(object):
 				if (numOfPtsAndLinesToShow <= showNPtsAndLines):
 					showNPtsAndLines = numOfPtsAndLinesToShow
 
-			self.exportImagePointsAndMatchesGraphically(firstImage, points1, secondImage, points2, indexPairs, createImageWithPtsAndLines, showNPtsAndLines)
+			if (enableSingleColor):
+				self.exportImagePointsAndMatchesGraphically(firstImage, points1, secondImage, points2, indexPairs, createImageWithPtsAndLines, showNPtsAndLines, enableSingleColor)
+			else:
+				self.exportImagePointsAndMatchesGraphically(firstImage, points1, secondImage, points2, indexPairs, createImageWithPtsAndLines, showNPtsAndLines)
 
 		# Returning the points.
 		return numpyArrayMatchedPointsOnImage1, numpyArrayMatchedPointsOnImage2
@@ -163,12 +166,24 @@ class Images2Points(object):
 		return pointsFromImage1, pointsFromImage2
 
 	
-	def exportImagePointsAndMatchesGraphically(self, firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches, exportImageName, numOfMatchesToShow=None):
+	def exportImagePointsAndMatchesGraphically(self, firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches, exportImageName, numOfMatchesToShow=None, enableSingleColor=None):
 		# Shows all of the matches by default.
 		numOfPointsToUse = len(matches) - 1
 		if (numOfMatchesToShow is not None):
 			if (numOfMatchesToShow <= numOfPointsToUse):
 				numOfPointsToUse = numOfMatchesToShow
 
-		imageWithDrawings = cv2.drawMatches(firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches[:numOfPointsToUse], None, flags=4)
+		# Temp.
+		imageWithDrawings = firstImage
+
+		# Choosing line colors.
+		if (enableSingleColor is not None):
+			if (enableSingleColor):
+				draw_params = dict(matchColor = (0,255,0), singlePointColor = (0,0,255))
+				imageWithDrawings = cv2.drawMatches(firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches[:numOfPointsToUse], None, flags=0, **draw_params)
+			else:
+				imageWithDrawings = cv2.drawMatches(firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches[:numOfPointsToUse], None, flags=4)
+		else:
+			imageWithDrawings = cv2.drawMatches(firstImage, firstImageKeyPts, secondImage, secondImageKeyPts, matches[:numOfPointsToUse], None, flags=4)
+
 		cv2.imwrite(exportImageName, imageWithDrawings)

@@ -27,7 +27,7 @@ pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1
 pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
 
 
-pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="ORB", crossCheck=True, normType=cv2.NORM_HAMMING, createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=20)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="ORB", crossCheck=True, normType=cv2.NORM_HAMMING, createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=20, enableSingleColor=True)
 
 ###
 

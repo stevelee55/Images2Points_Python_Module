@@ -39,6 +39,8 @@ This module requires cv2, numpy, csv, skimage, and matplotlib. Install these bef
    * Pass in name of the image file that will be exported. Include file extension.
 6. numOfPtsAndLinesToShow(Int. Number of total matches and detected feature points by default.)
    * Pass in number of points and matches to display in the image with pts and lines.
+7. enableSingleColor(Bool. Matching lines are unique colors by default.)
+   * If set True, matching lines in the image with points and lines become all neon-green and points become all red.
 
 Example 1: Only required parameters.
 ```
@@ -53,7 +55,7 @@ Example 2: All of the available parameters.
 img1 = cv2.imread("image1.jpg", 0)
 img2 = cv2.imread("image2.jpg", 0)
 
-pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="SIFT", crossCheck=True, normType=cv2.NORM_HAMMING2, createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=10)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="SIFT", crossCheck=True, normType=cv2.NORM_HAMMING2, createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=10, enableSingleColor=True)
 ```
 
 Recommendations:
