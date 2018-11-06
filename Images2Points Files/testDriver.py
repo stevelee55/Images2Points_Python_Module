@@ -9,8 +9,8 @@ import cv2
 
 moduler = Images2Points()
 
-image1Name = "hatcher1.jpg"
-image2Name = "hatcher2.jpg"
+image1Name = "hatcher3.jpg"
+image2Name = "hatcher6.jpg"
 
 # Reading in the images using the image names.
 img1 = cv2.imread(image1Name, 0)
@@ -25,7 +25,7 @@ pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1
 pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
 
 
-pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="SIFT", crossCheck=True, normType="NORM_L2", createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=50)
+pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2, outputcsvFileName="matchedPointsRaw.csv", detectorType="ORB", crossCheck=True, normType="NORM_HAMMING", createImageWithPtsAndLines="imageWithPtsAndLines.jpg", numOfPtsAndLinesToShow=20)
 
 ###
 
