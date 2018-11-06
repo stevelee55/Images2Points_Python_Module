@@ -1,6 +1,6 @@
 Written by Steve S. Lee
 stevesl@umich.edu
-		
+
 # Images2Points
 
 Python script that can:
@@ -12,7 +12,7 @@ Python script that can:
 
 ## Getting Started
 
-This module uses SIFT, SURF, and ORB, some of which are patented and cannot be used for commmerical purposes without license. Academic use only.
+This module uses SIFT, SURF, and ORB, some of which are patented and cannot be used for commercial purposes without license. Academic use only.
 
 ### Prerequisites
 
@@ -23,24 +23,24 @@ This module requires cv2, numpy, csv, skimage, and matplotlib. Install these bef
 
 ### getPointsFromImages(...)
 
-Required Parameters:
-1) firstImage(BGR.)
-2) secondImage(BGR.)
+-Required Parameters:
+1. firstImage(BGR.)
+2. secondImage(BGR.)
 
-Optional Parameters:
-1) outputcsvFileName(String. No file exported by default.)
-* Pass in name of the csv file that will be exported. Include file extension.
-2) detectorType(String. Uses "ORB" by default.)
-* Options: "ORB", "SIFT", and "SURF".
-3) crossCheck(Bool. Set "True" by default".)
-4) normType(String. Uses "NORM_HAMMING" by default.)
-* Options: "NORM_HAMMING", "NORM_L1", and "NORM_L2".
-5) createImageWithPtsAndLines(String. No image exported by default.)
-* Pass in name of the image file that will be exported. Include file extension.
-6) numOfPtsAndLinesToShow(Int. Number of total matches and detected feature points by default.)
-* Pass in number of points and matches to display in the image with pts and lines.
+-Optional Parameters:
+1. outputcsvFileName(String. No file exported by default.)
+   * Pass in name of the csv file that will be exported. Include file extension.
+2. detectorType(String. Uses "ORB" by default.)
+   * Options: "ORB", "SIFT", and "SURF".
+3. crossCheck(Bool. Set "True" by default".)
+4. normType(String. Uses "NORM_HAMMING" by default.)
+   * Options: "NORM_HAMMING", "NORM_L1", and "NORM_L2".
+5. createImageWithPtsAndLines(String. No image exported by default.)
+   * Pass in name of the image file that will be exported. Include file extension.
+6. numOfPtsAndLinesToShow(Int. Number of total matches and detected feature points by default.)
+   * Pass in number of points and matches to display in the image with pts and lines.
 
-Example 1:
+Example 1: Only required parameters.
 ```
 img1 = cv2.imread("image1.jpg", 0)
 img2 = cv2.imread("image2.jpg", 0)
@@ -48,7 +48,7 @@ img2 = cv2.imread("image2.jpg", 0)
 pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1, secondImage=img2)
 ```
 
-Example 2:
+Example 2: All of the available parameters.
 ```
 img1 = cv2.imread("image1.jpg", 0)
 img2 = cv2.imread("image2.jpg", 0)
@@ -57,24 +57,24 @@ pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1
 ```
 
 Recommendations:
-1) If ORB detector is used, use "NORM_HAMMING".
-2) If SIFT or SURF detector is used, use either "NORM_L1" or "NORM_L2".
+1. If ORB detector is used, use "NORM_HAMMING".
+2. If SIFT or SURF detector is used, use either "NORM_L1" or "NORM_L2".
 
 ### find_robust_matches_ranscac(...)
 
 "Required" Parameters:
-1) inputcsvFileName(String.)
-* CSV file of points from the function getPointsFromImages(...).
-2) inputPointsFromImage1(Array.)
-* Array of points from the function getPointsFromImages(...).
-3) inputPointsFromImage2(Array.)
-* Array of points from the function getPointsFromImages(...).
-4) outputcsvFileName(String. Doesn't output csv file by default.)
-* Pass in name of the csv file that will be exported. Include file extension.
+1. inputcsvFileName(String.)
+   * CSV file of points from the function getPointsFromImages(...).
+2. inputPointsFromImage1(Array.)
+   * Array of points from the function getPointsFromImages(...).
+3. inputPointsFromImage2(Array.)
+   * Array of points from the function getPointsFromImages(...).
+4. outputcsvFileName(String. Doesn't output csv file by default.)
+   * Pass in name of the csv file that will be exported. Include file extension.
 
 ** It is possible to not pass in "inputcsvFileName", "inputPointsFromImage1", and "inputPointsFromImage2", but to get the desired output, either "inputcsvFileName" or "inputPointsFromImage1", and "inputPointsFromImage2" should be passed in.
 
-Example 1:
+Example 1: Using the array of points from images 1 and 2.
 ```
 img1 = cv2.imread("image1.jpg", 0)
 img2 = cv2.imread("image2.jpg", 0)
@@ -83,7 +83,7 @@ pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1
 robustMatchesFromImage1, robustMatchesFromImage2 = moduler.find_robust_matches_ranscac(inputPointsFromImage1=pointsFromImage1, inputPointsFromImage2=pointsFromImage2)
 ```
 
-Example 2:
+Example 2: Using the csv with array of points from images 1 and 2.
 ```
 img1 = cv2.imread("image1.jpg", 0)
 img2 = cv2.imread("image2.jpg", 0)
@@ -92,7 +92,7 @@ pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1
 robustMatchesFromImage1, robustMatchesFromImage2 = moduler.find_robust_matches_ranscac(inputcsvFileName="matchedPointsRaw.csv")
 ```
 
-Example 3:
+Example 3: Example 1, but with exporting csv file option enabled.
 ```
 img1 = cv2.imread("image1.jpg", 0)
 img2 = cv2.imread("image2.jpg", 0)
@@ -101,7 +101,7 @@ pointsFromImage1, pointsFromImage2 = moduler.getPointsFromImages(firstImage=img1
 robustMatchesFromImage1, robustMatchesFromImage2 = moduler.find_robust_matches_ranscac(inputPointsFromImage1=pointsFromImage1, inputPointsFromImage2=pointsFromImage2, outputcsvFileName="robustMatches.csv")
 ```
 
-Example 4:
+Example 4: Example 2, but with exporting csv file option enabled.
 ```
 img1 = cv2.imread("image1.jpg", 0)
 img2 = cv2.imread("image2.jpg", 0)
