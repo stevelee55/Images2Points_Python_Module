@@ -9,8 +9,8 @@ import cv2
 
 moduler = Images2Points()
 
-image1Name = "hatcher6.jpg"
-image2Name = "hatcher3.jpg"
+image1Name = "TestData/hatcher6.jpg"
+image2Name = "TestData/hatcher3.jpg"
 
 #hatcher3 and 6
 
